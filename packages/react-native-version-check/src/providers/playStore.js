@@ -29,12 +29,15 @@ class PlayStoreProvider implements IProvider {
         opt.packageName = getVersionInfo().getPackageName();
       }
 
-      const storeUrl = `https://play.google.com/store/apps/details?id=${opt.packageName}&hl=en`;
+      const countryCode = opt.country || 'en';
+      const dateNow = new Date().getTime();
+      
+      const storeUrl = `https://play.google.com/store/apps/details?id=${opt.packageName}&hl=${countryCode}&date=${dateNow}`;
 
       return fetch(storeUrl, opt.fetchOptions)
         .then(res => res.text())
         .then(text => {
-          const match = text.match(/Current Version.+?>([\d.-]+)<\/span>/);
+          const match = text.match(/Current Version.+?>([\d.]+)<\/span>/);
           if (match) {
             const latestVersion = match[1].trim();
 
