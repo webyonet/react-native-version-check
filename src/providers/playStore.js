@@ -1,4 +1,6 @@
 // @flow
+import matchAll from 'string.prototype.matchall';
+import json5 from 'json5';
 import { getVersionInfo } from '../versionInfo';
 
 import { IProvider, IVersionAndStoreUrl } from './types';
@@ -16,7 +18,7 @@ export interface IPlayStoreProvider extends IProvider {
 function error(text: string) {
   return {
     message:
-      "Parse Error. Your app's play store page doesn't seem to have latest app version info.",
+      'Parse Error. Your app\'s play store page doesn\'t seem to have latest app version info.',
     text,
   };
 }
@@ -37,11 +39,14 @@ class PlayStoreProvider implements IProvider {
       return fetch(storeUrl, opt.fetchOptions)
         .then(res => res.text())
         .then(text => {
-          const match = text.match(/Mevcut Sürüm.+?>([\d.]+)<\/span>/);
-          if (match) {
-            const latestVersion = match[1].trim();
+          const matches = matchAll(text, /<script nonce=\"\S+\">AF_initDataCallback\((.*?)\);/g);
 
-            return Promise.resolve({ version: latestVersion, storeUrl });
+          for (const match of matches) {
+            const data = json5.parse(match[1]);
+            try {
+              return Promise.resolve({ version: data['data'][1][2][140][0][0][0], storeUrl });
+            } catch {
+            }
           }
 
           return Promise.reject(error(text));
