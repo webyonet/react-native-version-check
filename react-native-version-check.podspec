@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.homepage     = package["homepage"]
 
   s.license      = package["license"]
-  s.authors      = { "kimxogus" => "kgyoo8232@gmail.com" }
+
   s.platform     = :ios, "7.0"
 
   s.source       = { :git => package["repository"]["url"] }
