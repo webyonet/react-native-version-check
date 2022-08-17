@@ -3,6 +3,7 @@
   "version": "3.4.2",
   "description": "A version checker for react-native applications",
   "main": "index.js",
+  "author": "Taehyun Kim <kgyoo8232@gmail.com> (https://github.com/kimxogus)",
   "keywords": [
     "react-native",
     "android",
